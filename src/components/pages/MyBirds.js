@@ -13,7 +13,7 @@ const MyBirds = () => {
 
 
   async function runModel() {
-    const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/gh-pages/model/model.json');
+    const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
     let pic = document.getElementById('pic-to-predict')
     let tfTensor = tf.browser.fromPixels(pic)
       .resizeNearestNeighbor([224, 224])
