@@ -5,44 +5,38 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 } from "uuid";
 import * as tf from '@tensorflow/tfjs';
 
-//const model = tf.loadLayersModel('../../../../model/model.json');
-
 const MyBirds = () => {
   const [picture, setPicture] = useState(null);
   const [message, setMessage] = useState('');
   const [downloadedPic, setPic] = useState(null);
-  const [model, setModel] = useState();
+  const [picUrl, setPicUrl] = useState('');
 
-  const url = {
-    model: '../../../model/model.json',
-  };
 
-  async function loadModel(url) {
-    try {
-      // For layered model
-      const model = await tf.loadLayersModel(url.model);
-      // For graph model
-      // const model = await tf.loadGraphModel(url.model);
-      setModel(model);
-      console.log("Load model success")
-    }
-    catch (err) {
-      console.log(err);
-    }
+  async function runModel() {
+    const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/gh-pages/model/model.json');
+    let pic = document.getElementById('pic-to-predict')
+    let tfTensor = tf.browser.fromPixels(pic)
+      .resizeNearestNeighbor([224, 224])
+		  .toFloat()
+      .div(tf.scalar(255.0))
+		  .expandDims();
+    
+    const pred = model.predict(tfTensor);
+    console.log(`Output: ${tf.argMax(pred, -1)}`)
   }
 
-  useEffect(()=>{
-    tf.ready().then(()=>{
-      loadModel(url)
-    });
-    },[])
-
   const handlePictureUpload = (event) => {
-    const selectedFile = event.target.files[0]
+    const selectedFile = event.target.files[0];
     if (selectedFile == null) {
-      setMessage('')
+      setMessage('');
     } else {
       if (handlePictureCheck(selectedFile)) {
+        let reader = new FileReader();
+	      reader.onload = function () {
+		      let dataURL = reader.result;
+		      setPicUrl(dataURL);
+	      }
+        reader.readAsDataURL(selectedFile);
         setPicture(selectedFile);
         setMessage('');
       }
@@ -75,24 +69,6 @@ const MyBirds = () => {
         getDownloadURL(storageRef).then((url) => {
           console.log('File available at', url); // Tutaj trzeba będzie ustawić wsadzanie URL do bazy danych
         });
-      },
-      (error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        switch (error.code) {
-          case 'storage/unauthorized':
-            // User doesn't have permission to access the object
-            break;
-          case 'storage/canceled':
-            // User canceled the upload
-            break;
-    
-          // ...
-    
-          case 'storage/unknown':
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-        }
       });
     }
   }
@@ -105,16 +81,6 @@ const MyBirds = () => {
   const handlePictureDisplay = () => {
     setPic('https://firebasestorage.googleapis.com/v0/b/mybirdie-app.appspot.com/o/images%2Fd2fcf579-672b-4e22-8c2c-385a6f90fe19?alt=media&token=d0d99542-4ca8-49b4-b945-054fae916b65');
     setMessage('Enjoy!')
-  }
-
-  const handlePicturePrediction = () => {
-    if (picture) {
-      const prediction = tf.model.then( res => {
-        res.predict(picture)
-      })
-      console.log(prediction)
-      setMessage('done');
-    }
   }
 
   return (
@@ -134,7 +100,7 @@ const MyBirds = () => {
           <Button className="mt-3 me-3" onClick={handlePicturePass} disabled={!picture}>Pass to Storage</Button>
           <Button className="mt-3" onClick={handlePictureRemove} disabled={!picture}>Remove</Button>
           <Button className="mt-3" onClick={handlePictureDisplay} >Display</Button>
-          <Button className="mt-3" onClick={handlePicturePrediction} disabled={!picture}>Predict</Button>
+          <Button className="mt-3" onClick={runModel} disabled={!picture}>Predict</Button>
         </Col>
       </Row>
       {message && (
@@ -147,7 +113,7 @@ const MyBirds = () => {
       {picture && (
         <Row className="mt-3">
           <Col>
-            <img src={URL.createObjectURL(picture)} className="img-fluid" alt="Uploaded Bird" />
+            <img src={picUrl} className="img-fluid" alt="Uploaded Bird" width={224} height={224} id="pic-to-predict" />
           </Col>
         </Row>
       )}
@@ -162,4 +128,4 @@ const MyBirds = () => {
   );
 }
 
-export default MyBirds
+export default MyBirds;
