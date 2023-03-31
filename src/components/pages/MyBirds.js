@@ -1,6 +1,6 @@
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
-import storage from "../../firebase.js";
+import { storage } from "../../firebase.js";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 } from "uuid";
 import * as tf from '@tensorflow/tfjs';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -7,10 +7,19 @@ const Navbar = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <NavLink to="/" style={({ isActive }) => ({
+              color: isActive ? 'blue' : 'black'
+            })}>Home</NavLink>
           </li>
           <li>
-            <Link to="/mybirds">My Birds</Link>
+            <NavLink to="/mybirds" style={({ isActive }) => ({
+              color: isActive ? 'blue' : 'black'
+            })}>My Birds</NavLink>
+          </li>
+          <li>
+            <NavLink to="/login" style={({ isActive }) => ({
+              color: isActive ? 'blue' : 'black'
+            })}>Login / Sign Up</NavLink>
           </li>
         </ul>
       </nav>
@@ -20,4 +29,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;
