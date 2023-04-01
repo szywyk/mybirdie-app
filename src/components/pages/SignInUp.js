@@ -1,12 +1,13 @@
 import { getAuth } from "firebase/auth";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import { Container, Tabs, Tab, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const SignInUp = ({ defaultKey = 'login' }) => {
   const navigate = useNavigate();
   const auth = getAuth();
-  
+  const provider = new GoogleAuthProvider();
+
   const handleSignup = (event) => {
 
     event.preventDefault();
@@ -14,18 +15,18 @@ const SignInUp = ({ defaultKey = 'login' }) => {
     let password = event.target[1].value
 
     createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log('All good')
-      navigate('/home')
-      email = '';
-      password = '';
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log('Something went wrong')
-    });
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log('User created')
+        navigate('/home')
+        email = '';
+        password = '';
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('Something went wrong')
+      });
   }
 
   const handleLogin = (event) => {
@@ -34,18 +35,23 @@ const SignInUp = ({ defaultKey = 'login' }) => {
     let password = event.target[1].value
 
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log('All good')
-      navigate('/home')
-      email = '';
-      password = '';
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log('Something went wrong')
-    });
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log('User logged in')
+        navigate('/home')
+        email = '';
+        password = '';
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('Something went wrong')
+      });
+  }
+
+  const handleGoogleSignIn = () => {
+    navigate('/home');
+    signInWithRedirect(auth, provider);
   }
 
   return (
@@ -88,6 +94,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
               Sign Up
             </Button>
           </Form>
+          <Button onClick={handleGoogleSignIn}>Sign in with Google</Button>
         </Tab>
       </Tabs>
     </Container>
