@@ -4,20 +4,23 @@ import Logout from './Logout';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
-  const [loggedUser, setLoggedUser] = useState(null)
+const Navbar = ( {loggedUser } ) => {
+  /*const [loggedUser, setLoggedUser] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const auth = getAuth();
   //const navigator = useNavigate();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log(user.email);
+      console.log(user);
       setLoggedUser(user.email);
+      setUserId(user.uid);
     } else {
       console.log('User logged out');
       setLoggedUser(null);
+      setUserId(null);
     }
-  });
+  });*/
 
   return (
     <>

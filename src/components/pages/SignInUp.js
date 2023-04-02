@@ -2,6 +2,8 @@ import { getAuth } from "firebase/auth";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import { Container, Tabs, Tab, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { set, ref as dbRef } from "firebase/database";
+import { database } from '../../firebase.js';
 
 const SignInUp = ({ defaultKey = 'login' }) => {
   const navigate = useNavigate();
@@ -17,7 +19,10 @@ const SignInUp = ({ defaultKey = 'login' }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log('User created')
+        set(dbRef(database, `users/${user.uid}`), {
+          email: user.email,
+          userId: user.uid
+        });
         navigate('/home')
         email = '';
         password = '';
