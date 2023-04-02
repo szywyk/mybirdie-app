@@ -4,16 +4,12 @@ import { storage } from "../../firebase.js";
 import { database } from '../../firebase.js';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { ref as dbRef, set } from "firebase/database";
-import { getAuth } from 'firebase/auth';
 import { v4 } from "uuid";
 import * as tf from '@tensorflow/tfjs';
 
 const Home = ({userId}) => {
   const [picture, setPicture] = useState(null);
   const [message, setMessage] = useState('');
-  const [downloadedPic, setPic] = useState(null);
-  //const auth = getAuth();
-
 
   async function runModel() {
     const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
@@ -65,7 +61,6 @@ const Home = ({userId}) => {
         setMessage('Uploaded a picture!');
         setPicture(null)
         getDownloadURL(storageRef).then((url) => {
-          console.log('File available at', url);
           saveReference(userId, url, hash);
         });
       });
@@ -111,13 +106,6 @@ const Home = ({userId}) => {
         <Row className="mt-3">
           <Col>
             <img src={URL.createObjectURL(picture)} className="img-fluid" alt="Uploaded Bird" width={224} height={224} id="pic-to-predict" />
-          </Col>
-        </Row>
-      )}
-      {downloadedPic && (
-        <Row className="mt-3">
-          <Col>
-            <img src={downloadedPic} className="img-fluid" alt="Uploaded Bird" />
           </Col>
         </Row>
       )}

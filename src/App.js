@@ -32,7 +32,7 @@ function App() {
       }
         <Route path="/" element={<Navbar loggedUser={loggedUser} />}>
           <Route index element={<Home userId={userId} />} />
-          <Route path="mybirds" element={<MyBirds />} />
+          <Route path="mybirds" element={<MyBirds userId={userId} />} />
           <Route path="*" element={<NoPage />} />
           <Route path='login' element={<SignInUp defaultKey='login' />} />
           <Route path='signup' element={<SignInUp defaultKey='signup' />} />
