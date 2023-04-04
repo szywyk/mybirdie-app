@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Navbar from "./components/Navbar";
+import NavigationBar from "./components/Navbar";
 import Home from "./components/pages/Home";
 import MyBirds from "./components/pages/MyBirds";
 import NoPage from "./components/pages/NoPage";
@@ -30,7 +30,7 @@ function App() {
     <BrowserRouter>
       <Routes> {//Ewentualnie <Switch>, ale nie wiem czy zadziała i nie znam różnicy
       }
-        <Route path="/" element={<Navbar loggedUser={loggedUser} />}>
+        <Route path="/mybirdie-app" element={<NavigationBar loggedUser={loggedUser} />}>
           <Route index element={<Home userId={userId} />} />
           <Route path="mybirds" element={<MyBirds userId={userId} />} />
           <Route path="*" element={<NoPage />} />

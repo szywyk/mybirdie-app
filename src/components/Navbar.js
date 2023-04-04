@@ -1,43 +1,42 @@
 import React from 'react';
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, Link } from "react-router-dom";
+import { Navbar, Container, Nav, Offcanvas } from 'react-bootstrap';
 import Logout from './Logout';
 
-const Navbar = ( {loggedUser } ) => {
+const NavigationBar = ({ loggedUser }) => {
   return (
     <>
-      <nav>
-        <ul>
-          <li>
-            <NavLink to="/" style={({ isActive }) => ({
-              color: isActive ? 'blue' : 'black'
-            })}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/mybirds" style={({ isActive }) => ({
-              color: isActive ? 'blue' : 'black'
-            })}>My Birds</NavLink>
-          </li>
-          {!loggedUser && (
-            <li>
-              <NavLink to="/login" style={({ isActive }) => ({
-                color: isActive ? 'blue' : 'black'
-              })}>Login / Sign Up</NavLink>
-            </li>
-          )}
-          {loggedUser && (
-            <div>
-              {loggedUser}
-              <li>
-                <Logout />
-              </li>
-            </div>
-          )}
-        </ul>
-      </nav>
-
+      {['md'].map((expand) => (
+      <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb3">
+        <Container fluid>
+          <Navbar.Brand>Navbar Offcanvas</Navbar.Brand>
+          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
+          <Navbar.Offcanvas
+            id={`offcanvasNavbar-expand-${expand}`}
+            aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
+            placement="end"
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
+                Offcanvas
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link as={Link} to="/mybirdie-app">Home</Nav.Link>
+                <Nav.Link as={Link} to="mybirds">My Birds</Nav.Link>
+                {!loggedUser && (
+                  <Nav.Link as={Link} to="login">Login / Sign Up</Nav.Link>
+                )}
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
+      ))}
       <Outlet />
     </>
   )
 }
 
-export default Navbar;
+export default NavigationBar;
