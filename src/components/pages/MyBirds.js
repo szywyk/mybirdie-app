@@ -31,9 +31,9 @@ const MyBirds = ({userId}) => {
         </Col>
       </Row>
       {pictures && (
-        <Col>
+        <Container>
           {picturesToDisplay}
-        </Col>
+        </Container>
       )}
     </Container>
   );

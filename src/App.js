@@ -28,8 +28,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes> {//Ewentualnie <Switch>, ale nie wiem czy zadziała i nie znam różnicy
-      }
+      <Routes>
         <Route path="/mybirdie-app" element={<NavigationBar loggedUser={loggedUser} />}>
           <Route index element={<Home userId={userId} />} />
           <Route path="mybirds" element={<MyBirds userId={userId} />} />

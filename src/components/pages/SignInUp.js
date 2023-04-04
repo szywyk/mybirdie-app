@@ -23,7 +23,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
           email: user.email,
           userId: user.uid
         });
-        navigate('/home')
+        navigate('/mybirdie-app')
         email = '';
         password = '';
       })
@@ -43,7 +43,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log('User logged in')
-        navigate('/home')
+        navigate('/mybirdie-app')
         email = '';
         password = '';
       })
@@ -55,7 +55,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
   }
 
   const handleGoogleSignIn = () => {
-    navigate('/home');
+    navigate('/mybirdie-app');
     signInWithRedirect(auth, provider);
   }
 
