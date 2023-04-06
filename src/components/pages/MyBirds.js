@@ -1,39 +1,34 @@
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import React, { useState } from 'react';
+import { Container, Row } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
 import { database } from '../../firebase';
 import { onValue, ref } from 'firebase/database';
+import MyBird from '../MyBird';
 
-const MyBirds = ({userId}) => {
+const MyBirds = ({ userId }) => {
   const [pictures, setPictures] = useState([]);
 
-  const handlePictureRemove = () => {
-
-  }
-
-  const handlePictureDisplay = () => {
+  useEffect(() => {
     const picsRef = ref(database, `/pictures/users/${userId}`);
     onValue(picsRef, (snapshot) => {
-      const data = snapshot.val();
-      const pics = [];
-      for (const [key, value] of Object.entries(data))
-        pics.push(value);
-      setPictures(pics);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const pics = [];
+        pics.push(Object.entries(data));
+        setPictures(Object.entries(data));
+      } else {
+        //pass
+      }
     });
-  }
-  const picturesToDisplay = pictures.map(url => <img src={url} key={url} className="img-fluid" alt="Uploaded Bird" /> );
+  }, [userId]);
+  const picturesToDisplay = pictures.map((arr) => <MyBird url={arr[1].url} name={arr[1].name} picId={arr[0]} userId={userId} key={arr[1].url}/>);
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Button className="mt-3" onClick={handlePictureRemove} >Remove</Button>
-          <Button className="mt-3" onClick={handlePictureDisplay} >Display</Button>
-        </Col>
-      </Row>
+    <Container className="mt-3">
+      <Row className="justify-content-center fw-bold fs-2 mb-3">My Birds</Row>
       {pictures && (
-        <Container>
+        <Row xs={2} md={3} lg={5}>
           {picturesToDisplay}
-        </Container>
+        </Row>
       )}
     </Container>
   );

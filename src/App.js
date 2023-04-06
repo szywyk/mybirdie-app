@@ -16,11 +16,9 @@ function App() {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log(user)
       setLoggedUser(user.email);
       setUserId(user.uid);
     } else {
-      console.log('User logged out');
       setLoggedUser(null);
       setUserId(null);
     }
