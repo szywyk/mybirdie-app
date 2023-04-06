@@ -77,12 +77,12 @@ const Home = ({ userId }) => {
       const storageRef = ref(storage, `images/${hash}`);
       uploadBytes(storageRef, picture).then(() => {
         setMessage(`${name} saved in 'My Birds'!`);
+        getDownloadURL(storageRef).then((url) => {
+          saveReference(userId, url, hash, name);
+        });
         setPicture(null);
         setModelPicture(null);
         setName('');
-        getDownloadURL(storageRef).then((url) => {
-          saveReference(userId, url, hash);
-        });
       });
     }
   }
@@ -92,8 +92,9 @@ const Home = ({ userId }) => {
     setMessage('');
   }
 
-  const saveReference = (userId, url, hash) => {
-    set(dbRef(database, `pictures/users/${userId}/${hash}`), url);
+  const saveReference = (userId, url, hash, name) => {
+    set(dbRef(database, `pictures/users/${userId}/${hash}/name`), name);
+    set(dbRef(database, `pictures/users/${userId}/${hash}/url`), url);
   }
 
   const handleYes = () => {
@@ -125,7 +126,6 @@ const Home = ({ userId }) => {
       </Row>
       <Row>
         <Col>
-          <Button className="mt-3 me-3" onClick={handlePicturePass} disabled={!picture}>Pass to Storage</Button>
           <Button className="mt-3 me-3" onClick={handlePictureRemove} disabled={!picture}>Remove</Button>
           <Button className="mt-3 me-3" onClick={runModel} disabled={!picture}>Predict</Button>
         </Col>
