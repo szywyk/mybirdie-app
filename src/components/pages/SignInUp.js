@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
-import { Container, Tabs, Tab, Form, Button } from "react-bootstrap";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import { Container, Tabs, Tab, Form, Button, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { set, ref as dbRef } from "firebase/database";
 import { database } from '../../firebase.js';
@@ -28,9 +28,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
         password = '';
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('Something went wrong')
+        //pass
       });
   }
 
@@ -40,17 +38,13 @@ const SignInUp = ({ defaultKey = 'login' }) => {
     let password = event.target[1].value
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log('User logged in')
+      .then(() => {
         navigate('/mybirdie-app')
         email = '';
         password = '';
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('Something went wrong')
+        //pass
       });
   }
 
@@ -60,29 +54,42 @@ const SignInUp = ({ defaultKey = 'login' }) => {
   }
 
   return (
-    <Container className="mt-3">
+    <Container className="mt-3" style={{ maxWidth: 600 }}>
       <Tabs
         defaultActiveKey={defaultKey}
-        id="justify-tab-example"
         className="mb-3"
         justify
       >
-        <Tab eventKey="login" title="Login">
+        <Tab eventKey="login" title="Login" tabClassName="text-reset">
           <Form onSubmit={handleLogin}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Login
-            </Button>
+            <Row>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="email" placeholder="Enter email" />
+              </Form.Group>
+            </Row>
+            <Row>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" placeholder="Password" />
+              </Form.Group>
+            </Row>
+            <Row className="justify-content-center">
+              <Button variant="outline-dark" type="submit" style={{ maxWidth: '50%' }}>
+                Login
+              </Button>
+            </Row>
           </Form>
+          <Row className=" mt-2 justify-content-center">
+              or
+          </Row>
+          <Row className=" mt-2 justify-content-center">
+            <Button variant="outline-dark" onClick={handleGoogleSignIn} style={{ maxWidth: '50%' }}>
+              Sign in with Google
+            </Button>
+          </Row>
         </Tab>
-        <Tab eventKey="signup" title="Sign Up">
+        <Tab eventKey="signup" title="Sign Up" tabClassName="text-reset">
           <Form onSubmit={handleSignup}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -95,11 +102,20 @@ const SignInUp = ({ defaultKey = 'login' }) => {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Sign Up
-            </Button>
+            <Row className="justify-content-center">
+              <Button variant="outline-dark" type="submit" style={{ maxWidth: '50%' }}>
+                Sign Up
+              </Button>
+            </Row>
           </Form>
-          <Button onClick={handleGoogleSignIn}>Sign in with Google</Button>
+          <Row className=" mt-2 justify-content-center">
+              or
+          </Row>
+          <Row className=" mt-2 justify-content-center">
+            <Button variant="outline-dark" onClick={handleGoogleSignIn} style={{ maxWidth: '50%' }}>
+              Sign in with Google
+            </Button>
+          </Row>
         </Tab>
       </Tabs>
     </Container>

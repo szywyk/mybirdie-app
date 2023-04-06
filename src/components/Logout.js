@@ -7,10 +7,8 @@ const Logout = () => {
   const handleLogout = () => {
     const auth = getAuth();
     signOut(auth).then(() => { 
-      console.log('Logout successful');
       navigate('/mybirdie-app');
     }).catch((error) => {
-      console.log('Something went wrong.')
     })
   }
   

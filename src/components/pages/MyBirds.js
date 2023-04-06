@@ -10,15 +10,17 @@ const MyBirds = ({ userId }) => {
   useEffect(() => {
     const picsRef = ref(database, `/pictures/users/${userId}`);
     onValue(picsRef, (snapshot) => {
-      const data = snapshot.val();
-      const pics = [];
-      pics.push(Object.entries(data));
-      setPictures(Object.entries(data));
-      console.log("Use Effect");
-      console.log(pics);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const pics = [];
+        pics.push(Object.entries(data));
+        setPictures(Object.entries(data));
+      } else {
+        //pass
+      }
     });
   }, [userId]);
-  const picturesToDisplay = pictures.map((arr) => <MyBird url={arr[1].url} name={arr[1].name} picId={arr[0]} userId={userId} />);
+  const picturesToDisplay = pictures.map((arr) => <MyBird url={arr[1].url} name={arr[1].name} picId={arr[0]} userId={userId} key={arr[1].url}/>);
 
   return (
     <Container className="mt-3">

@@ -1,5 +1,5 @@
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import React, { useState } from 'react';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import React, { useState, useRef } from 'react';
 import { storage } from "../../firebase.js";
 import { database } from '../../firebase.js';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -14,10 +14,12 @@ const Home = ({ userId }) => {
   const [message, setMessage] = useState('');
   const [modelPicture, setModelPicture] = useState(null);
   const [name, setName] = useState('');
-  const [modifiedPicture, setModifiedPicture] = useState(null);
+  const [pictureSet, setPictureSet] = useState(false);
+  const inputRef = useRef(null);
 
   async function runModel() {
     const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
+    setPictureSet(false);
     let pic = document.getElementById('pic-to-predict');
     let tfTensor = tf.browser.fromPixels(pic)
       .resizeNearestNeighbor([224, 224])
@@ -31,24 +33,26 @@ const Home = ({ userId }) => {
       tf.argMax(pred, -1).data().then((prediction) => {
         const percent = values[prediction];
         const species = Object.keys(speciesNames)[prediction];
-        setMessage(`We are ${(percent * 100).toFixed(2)}% sure that your bird's name is`);
+        setMessage(`We are ${(percent * 100).toFixed(2)}% sure it's a`);
         setName(`${species}`);
         getDownloadURL(ref(storage, `birdsModelPictures/${species}/1.jpg`))
           .then(url => {
             setModelPicture(url);
           })
           .catch(error => {
-            console.log(error)
+            //pass
           })
       });
     });
   }
 
-  const handlePictureUpload = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile == null) {
-      setMessage('');
-    } else {
+  const handleUploadClick = () => {
+    inputRef.current?.click();
+  }
+
+  const handlePictureUpload = () => {
+    const selectedFile = inputRef.current.files[0];
+    if (selectedFile != null) {
       if (handlePictureCheck(selectedFile)) {
         try {
           Resizer.imageFileResizer(
@@ -60,8 +64,10 @@ const Home = ({ userId }) => {
             0,
             (uri) => {
               setPicture(uri);
-              console.log(uri);
+              setPictureSet(true);
               setMessage('');
+              setModelPicture(null);
+              setName('');
             },
             "file"
           );
@@ -71,6 +77,9 @@ const Home = ({ userId }) => {
       }
       else {
         setPicture(null);
+        setPictureSet(false);
+        setName('');
+        setModelPicture(null);
         setMessage('Selected file is not a valid image.')
       }
     }
@@ -99,8 +108,8 @@ const Home = ({ userId }) => {
           saveReference(userId, url, hash, name);
         });
         setPicture(null);
+        setPictureSet(false);
         setModelPicture(null);
-        setModifiedPicture(null);
         setName('');
       });
     }
@@ -108,6 +117,7 @@ const Home = ({ userId }) => {
 
   const handlePictureRemove = () => {
     setPicture(null);
+    setPictureSet(false);
     setMessage('');
   }
 
@@ -120,72 +130,78 @@ const Home = ({ userId }) => {
     if (userId) {
       handlePicturePass();
     } else {
+      setModelPicture(null);
+      setPictureSet(true);
+      setName('');
       setMessage(`That's great! If you want to save your birds for later, please sign in.`)
     }
   }
 
   const handleNo = () => {
     setModelPicture(null);
+    setPictureSet(true);
     setName('');
-    setMessage('Sorry to hear that.');
+    setMessage('Try different picture.');
   }
 
   return (
     <Container>
-      <Row className="mt-4" lg={3} md={3} sm={3} xs={3} xl={3} xxl={3}>
-        <Col></Col>
-        <Col>
-          <Form>
-            <Form.Group controlId="pictureUpload">
-              <Form.Label>Upload a picture:</Form.Label>
-              <Form.Control type="file" onChange={handlePictureUpload} accept="image/*" />
-            </Form.Group>
-          </Form>
+      <Row className="mt-4">
+        <Col className="justify-content-center d-flex">
+          <label className="mx-3 fw-bold fs-4">Upload a picture of a bird</label>
+          <input ref={inputRef} className="d-none" type="file" onChange={handlePictureUpload} />
         </Col>
       </Row>
-      <Row>
-        <Col>
-          <Button className="mt-3 me-3" variant="dark" onClick={handlePictureRemove} disabled={!picture}>Remove</Button>
-          <Button className="mt-3 me-3" variant="dark" onClick={runModel} disabled={!picture}>Predict</Button>
+      <Row className="mt-4">
+        <Col className="justify-content-center d-flex">
+          <Button variant="outline-dark" onClick={handleUploadClick} className="fs-5">Upload</Button>
         </Col>
       </Row>
       {picture && (
         <Row className="mt-3">
-          <Col>
-            <img src={URL.createObjectURL(picture)} className="img-fluid" alt="Uploaded Bird" width={224} height={224} id="pic-to-predict" />
+          <Col className="justify-content-center d-flex">
+            <img src={URL.createObjectURL(picture)} className="img-fluid" alt="Uploaded Bird" width={300} height={300} id="pic-to-predict" />
+          </Col>
+        </Row>
+      )}
+      {pictureSet && (
+        <Row>
+          <Col className="justify-content-center d-flex">
+            <Button className="mt-3 mx-2 fs-5" variant="outline-dark" onClick={handlePictureRemove} >Remove</Button>
+            <Button className="mt-3 mx-2 fs-5" variant="outline-dark" onClick={runModel} >Check now</Button>
           </Col>
         </Row>
       )}
       {message && (
         <Row className="mt-3">
-          <Col>
-            <h2>{message}</h2>
+          <Col className="justify-content-center d-flex fw-bold fs-4">
+            {message}
           </Col>
         </Row>
       )}
       {name && (
         <Row className="mt-3">
-          <Col>
-            <h1>{name}</h1>
+          <Col className="justify-content-center d-flex fw-bold fs-2">
+            {name}
           </Col>
         </Row>
       )}
       {modelPicture && (
         <>
-          <Row className="mt-3">
-            <Col>
-              <h2>Is this your bird?</h2>
+          <Row className="mt-5">
+            <Col className="justify-content-center d-flex fw-bold fs-4">
+              Is this your bird?
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col>
-              <img src={modelPicture} className="img-fluid" alt="Model Bird" width={224} height={224} id="model-pic" />
+            <Col className="justify-content-center d-flex">
+              <img src={modelPicture} className="img-fluid" alt="Model Bird" width={300} height={300} id="model-pic" />
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col>
-              <Button className='me-3' onClick={handleYes}>YES</Button>
-              <Button className='me-3' onClick={handleNo}>NO</Button>
+            <Col className="justify-content-center d-flex">
+              <Button className="mt-3 mb-3 mx-2 fw-bold" variant="outline-dark" onClick={handleYes}>Yes</Button>
+              <Button className="mt-3 mb-3 mx-2 fw-bold" variant="outline-dark" onClick={handleNo}>No</Button>
             </Col>
           </Row>
         </>
