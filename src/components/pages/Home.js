@@ -7,16 +7,18 @@ import { ref as dbRef, set } from "firebase/database";
 import { v4 } from "uuid";
 import * as tf from '@tensorflow/tfjs';
 import speciesNames from '../../speciesNames.json';
+import Resizer from 'react-image-file-resizer';
 
 const Home = ({ userId }) => {
   const [picture, setPicture] = useState(null);
   const [message, setMessage] = useState('');
   const [modelPicture, setModelPicture] = useState(null);
   const [name, setName] = useState('');
+  const [modifiedPicture, setModifiedPicture] = useState(null);
 
   async function runModel() {
     const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
-    let pic = document.getElementById('pic-to-predict')
+    let pic = document.getElementById('pic-to-predict');
     let tfTensor = tf.browser.fromPixels(pic)
       .resizeNearestNeighbor([224, 224])
       .toFloat()
@@ -48,8 +50,24 @@ const Home = ({ userId }) => {
       setMessage('');
     } else {
       if (handlePictureCheck(selectedFile)) {
-        setPicture(selectedFile);
-        setMessage('');
+        try {
+          Resizer.imageFileResizer(
+            selectedFile,
+            224,
+            224,
+            "JPEG",
+            100,
+            0,
+            (uri) => {
+              setPicture(uri);
+              console.log(uri);
+              setMessage('');
+            },
+            "file"
+          );
+        } catch (err) {
+          setMessage(err);
+        }
       }
       else {
         setPicture(null);
@@ -82,6 +100,7 @@ const Home = ({ userId }) => {
         });
         setPicture(null);
         setModelPicture(null);
+        setModifiedPicture(null);
         setName('');
       });
     }
@@ -100,7 +119,6 @@ const Home = ({ userId }) => {
   const handleYes = () => {
     if (userId) {
       handlePicturePass();
-
     } else {
       setMessage(`That's great! If you want to save your birds for later, please sign in.`)
     }
@@ -114,7 +132,8 @@ const Home = ({ userId }) => {
 
   return (
     <Container>
-      <Row className="mt-4">
+      <Row className="mt-4" lg={3} md={3} sm={3} xs={3} xl={3} xxl={3}>
+        <Col></Col>
         <Col>
           <Form>
             <Form.Group controlId="pictureUpload">
@@ -126,8 +145,8 @@ const Home = ({ userId }) => {
       </Row>
       <Row>
         <Col>
-          <Button className="mt-3 me-3" onClick={handlePictureRemove} disabled={!picture}>Remove</Button>
-          <Button className="mt-3 me-3" onClick={runModel} disabled={!picture}>Predict</Button>
+          <Button className="mt-3 me-3" variant="dark" onClick={handlePictureRemove} disabled={!picture}>Remove</Button>
+          <Button className="mt-3 me-3" variant="dark" onClick={runModel} disabled={!picture}>Predict</Button>
         </Col>
       </Row>
       {picture && (

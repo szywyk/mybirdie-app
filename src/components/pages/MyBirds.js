@@ -21,7 +21,8 @@ const MyBirds = ({ userId }) => {
   const picturesToDisplay = pictures.map((arr) => <MyBird url={arr[1].url} name={arr[1].name} picId={arr[0]} userId={userId} />);
 
   return (
-    <Container>
+    <Container className="mt-3">
+      <Row className="justify-content-center fw-bold fs-2 mb-3">My Birds</Row>
       {pictures && (
         <Row xs={2} md={3} lg={5}>
           {picturesToDisplay}

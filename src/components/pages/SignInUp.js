@@ -60,7 +60,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
   }
 
   return (
-    <Container>
+    <Container className="mt-3">
       <Tabs
         defaultActiveKey={defaultKey}
         id="justify-tab-example"
