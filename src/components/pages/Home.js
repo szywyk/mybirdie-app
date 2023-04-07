@@ -17,20 +17,20 @@ const Home = ({ userId }) => {
   const [name, setName] = useState('');
   const [pictureSet, setPictureSet] = useState(false);
   const inputRef = useRef(null);
-  
+
   useEffect(() => {
     (async () => {
       const loadedModel = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
       setModel(loadedModel);
-      
+
       // just a warm up for a model
-      const warmupResult = loadedModel.predict(tf.zeros([1,224,224,3], 'float32'));
-      warmupResult.dataSync(); 
+      const warmupResult = loadedModel.predict(tf.zeros([1, 224, 224, 3], 'float32'));
+      warmupResult.dataSync();
       tf.dispose(warmupResult);
     })();
   }, []);
 
-  async function runModel() {
+  const runModel = () => {
     setPictureSet(false);
     let pic = document.getElementById('pic-to-predict');
     let tfTensor = tf.browser.fromPixels(pic)
