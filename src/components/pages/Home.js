@@ -1,5 +1,5 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { storage } from "../../firebase.js";
 import { database } from '../../firebase.js';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -10,15 +10,27 @@ import speciesNames from '../../speciesNames.json';
 import Resizer from 'react-image-file-resizer';
 
 const Home = ({ userId }) => {
+  const [model, setModel] = useState(null)
   const [picture, setPicture] = useState(null);
   const [message, setMessage] = useState('');
   const [modelPicture, setModelPicture] = useState(null);
   const [name, setName] = useState('');
   const [pictureSet, setPictureSet] = useState(false);
   const inputRef = useRef(null);
+  
+  useEffect(() => {
+    (async () => {
+      const loadedModel = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
+      setModel(loadedModel);
+      
+      // just a warm up for a model
+      const warmupResult = loadedModel.predict(tf.zeros([1,224,224,3], 'float32'));
+      warmupResult.dataSync(); 
+      tf.dispose(warmupResult);
+    })();
+  }, []);
 
   async function runModel() {
-    const model = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
     setPictureSet(false);
     let pic = document.getElementById('pic-to-predict');
     let tfTensor = tf.browser.fromPixels(pic)
@@ -30,6 +42,7 @@ const Home = ({ userId }) => {
     const pred = model.predict(tfTensor);
     pred.softmax().data().then((v) => {
       const values = v;
+      tf.dispose(tfTensor);
       tf.argMax(pred, -1).data().then((prediction) => {
         const percent = values[prediction];
         const species = Object.keys(speciesNames)[prediction];
