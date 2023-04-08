@@ -63,13 +63,13 @@ const SignInUp = ({ defaultKey = 'login' }) => {
         <Tab eventKey="login" title="Login" tabClassName="text-reset">
           <Form onSubmit={handleLogin}>
             <Row>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Group className="mb-3" controlId="loginEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" />
               </Form.Group>
             </Row>
             <Row>
-              <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Group className="mb-3" controlId="loginPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" />
               </Form.Group>
@@ -91,14 +91,14 @@ const SignInUp = ({ defaultKey = 'login' }) => {
         </Tab>
         <Tab eventKey="signup" title="Sign Up" tabClassName="text-reset">
           <Form onSubmit={handleSignup}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3" controlId="signUpEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control type="email" placeholder="Enter email" />
               <Form.Text className="text-muted">
                 We'll never share your email with anyone else.
               </Form.Text>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Group className="mb-3" controlId="signUpPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
