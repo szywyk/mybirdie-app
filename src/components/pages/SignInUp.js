@@ -50,6 +50,7 @@ const SignInUp = ({ defaultKey = 'login', loggedUser }) => {
   }
 
   const handleGoogleSignIn = () => {
+    navigate('/mybirdie-app')
     signInWithRedirect(auth, provider);
   }
 
