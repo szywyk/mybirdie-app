@@ -31,8 +31,8 @@ function App() {
           <Route index element={<Home userId={userId} />} />
           <Route path="mybirds" element={<MyBirds userId={userId} />} />
           <Route path="*" element={<NoPage />} />
-          <Route path='login' element={<SignInUp defaultKey='login' />} />
-          <Route path='signup' element={<SignInUp defaultKey='signup' />} />
+          <Route path='login' element={<SignInUp defaultKey='login' loggedUser={loggedUser}/>} />
+          <Route path='signup' element={<SignInUp defaultKey='signup' loggedUser={loggedUser}/>} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -4,8 +4,9 @@ import { Container, Tabs, Tab, Form, Button, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { set, ref as dbRef } from "firebase/database";
 import { database } from '../../firebase.js';
+import { useEffect } from "react";
 
-const SignInUp = ({ defaultKey = 'login' }) => {
+const SignInUp = ({ defaultKey = 'login', loggedUser }) => {
   const navigate = useNavigate();
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -39,7 +40,7 @@ const SignInUp = ({ defaultKey = 'login' }) => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        navigate('/mybirdie-app')
+        navigate('/mybirdie-app');
         email = '';
         password = '';
       })
@@ -49,9 +50,14 @@ const SignInUp = ({ defaultKey = 'login' }) => {
   }
 
   const handleGoogleSignIn = () => {
-    navigate('/mybirdie-app');
     signInWithRedirect(auth, provider);
   }
+
+  useEffect(() => {
+    if(loggedUser) {
+      navigate('/mybirdie-app');
+    }
+  })
 
   return (
     <Container className="mt-3" style={{ maxWidth: 600 }}>
