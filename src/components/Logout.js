@@ -2,7 +2,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { Nav } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 
-const Logout = () => {
+const Logout = ( {toggleOff} ) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     const auth = getAuth();
@@ -13,7 +13,7 @@ const Logout = () => {
   }
   
   return (
-    <Nav.Link as={Link} onClick={handleLogout}>Logout</Nav.Link>
+    <Nav.Link as={Link} onClick={() => { handleLogout(); toggleOff();}}>Logout</Nav.Link>
   )
 }
 
