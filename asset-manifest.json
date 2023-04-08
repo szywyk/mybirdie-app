@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/mybirdie-app/static/css/main.c2cab247.css",
-    "main.js": "/mybirdie-app/static/js/main.c1e819c5.js",
+    "main.js": "/mybirdie-app/static/js/main.bb54413f.js",
     "index.html": "/mybirdie-app/index.html",
     "main.c2cab247.css.map": "/mybirdie-app/static/css/main.c2cab247.css.map",
-    "main.c1e819c5.js.map": "/mybirdie-app/static/js/main.c1e819c5.js.map"
+    "main.bb54413f.js.map": "/mybirdie-app/static/js/main.bb54413f.js.map"
   },
   "entrypoints": [
     "static/css/main.c2cab247.css",
-    "static/js/main.c1e819c5.js"
+    "static/js/main.bb54413f.js"
   ]
 }
