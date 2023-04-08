@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import { Navbar, Container, Nav, Offcanvas } from 'react-bootstrap';
 import Logout from './Logout';
 
 const NavigationBar = ({ loggedUser }) => {
-  const [show, setShow] = useState(false);
+  const offCanvasRef = useRef(null);
 
-  const toggleOffCanvas = () => {
-    setShow((show) => !show);
+  const closeOffCanvas = () => {
+    if(offCanvasRef.current.backdrop)
+      offCanvasRef.current.backdrop.click();
   };
 
   return (
@@ -16,13 +17,12 @@ const NavigationBar = ({ loggedUser }) => {
         <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb3">
           <Container >
             <Navbar.Brand as={Link} to="/mybirdie-app">MyBirdie App</Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} onClick={toggleOffCanvas} />
+            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
             <Navbar.Offcanvas
               id={`offcanvasNavbar-expand-${expand}`}
               aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
               placement="end"
-              show={show}
-              onHide={toggleOffCanvas}
+              ref={offCanvasRef}
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
@@ -32,21 +32,21 @@ const NavigationBar = ({ loggedUser }) => {
               <Offcanvas.Body>
                 <Nav className="justify-content-between flex-grow-1 pe-3">
                   <Nav>
-                    <Nav.Link as={Link} to="/mybirdie-app" onClick={toggleOffCanvas}>Home</Nav.Link>
+                    <Nav.Link as={Link} to="/mybirdie-app" onClick={closeOffCanvas}>Home</Nav.Link>
                     {loggedUser && (
-                      <Nav.Link as={Link} to="mybirds" onClick={toggleOffCanvas}>My Birds</Nav.Link>
+                      <Nav.Link as={Link} to="mybirds" onClick={closeOffCanvas}>My Birds</Nav.Link>
                     )}
                   </Nav>
                   {loggedUser && (
                     <Nav>
                       <Nav.Link as="li"></Nav.Link>
                       <Nav.Link as="li">{loggedUser}</Nav.Link>
-                      <Logout toggleOff={toggleOffCanvas}/>
+                      <Logout closeOff={closeOffCanvas}/>
                     </Nav>
                   )}
                   {!loggedUser && (
                     <Nav>
-                      <Nav.Link as={Link} to="login" onClick={toggleOffCanvas}>Login / Sign Up</Nav.Link>
+                      <Nav.Link as={Link} to="login" onClick={closeOffCanvas}>Login / Sign Up</Nav.Link>
                     </Nav>
                   )}
                 </Nav>
