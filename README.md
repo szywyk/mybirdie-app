@@ -1,6 +1,6 @@
 ## Links
 * The app on Github Pages: <https://szywyk.github.io/mybirdie-app/>
-* Model: <https://colab.research.google.com/drive/1I0254_ClCGvunwAkKprc0AzGPEaSFaAC#scrollTo=jaF8r6aOl48C>
+* Model: <https://www.kaggle.com/szymonio/birds-image-classification>
 * Dataset: <https://www.kaggle.com/datasets/gpiosenka/100-bird-species>
 
 ## About project
@@ -12,8 +12,11 @@ CNN model was created in Python using TensorFlow library. Then, it was converted
 
 Google Firebase was used as backend - realtime database, authentication and cloud storage.
 
+## Model
+Current model recognizes correctly ~70% of test images. Soon, I will train a model using transfer learning which will be much more accurate.
+
 ## Dataset
-Dataset used to train the model comes from Kaggle and contains images of 515 bird species. Dataset is divided into train, validation and test sets. Each species contains over 100 train images.
+Dataset used to train the model comes from Kaggle and contains images of 510 bird species. Dataset is divided into train, validation and test sets. Each species contains over 100 train images.
 
 ## App functionalities
 
