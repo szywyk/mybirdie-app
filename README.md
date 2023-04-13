@@ -8,7 +8,7 @@ This is a bird species classification web app using convolutional neural network
 
 The app was developed in React.js using mainly React-Bootstrap for UI.
 
-CNN model was created in Python using TensorFlow library. Then, it was converted into a format suitable for Tensorflow.js, which was used to implement image classification in the app.
+CNN model was created in Python using TensorFlow library. Then, it was converted into a format suitable for TensorFlow.js, which was used to implement image classification in the app.
 
 Google Firebase was used as backend - realtime database, authentication and cloud storage.
 
