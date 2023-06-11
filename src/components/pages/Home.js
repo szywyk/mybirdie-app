@@ -20,7 +20,7 @@ const Home = ({ userId }) => {
 
   useEffect(() => {
     (async () => {
-      const loadedModel = await tf.loadLayersModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model/model.json');
+      const loadedModel = await tf.loadGraphModel('https://raw.githubusercontent.com/szywyk/mybirdie-app/master/model-EfficientNetB0-finetuning/model.json');
       setModel(loadedModel);
 
       // just a warm up for a model
@@ -36,11 +36,10 @@ const Home = ({ userId }) => {
     let tfTensor = tf.browser.fromPixels(pic)
       .resizeNearestNeighbor([224, 224])
       .toFloat()
-      .div(tf.scalar(255.0))
       .expandDims();
 
     const pred = model.predict(tfTensor);
-    pred.softmax().data().then((v) => {
+    pred.data().then((v) => {
       const values = v;
       tf.dispose(tfTensor);
       tf.argMax(pred, -1).data().then((prediction) => {
