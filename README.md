@@ -1,6 +1,6 @@
 ## Links
-* The app on Github Pages: <https://szywyk.github.io/mybirdie-app/>
-* Model: https://www.kaggle.com/code/szymonio/efiicientnetv2-b0-bird-classification
+* The app on GitHub Pages: <https://szywyk.github.io/mybirdie-app/>
+* Model training: https://www.kaggle.com/code/szymonio/efiicientnetv2-b0-bird-classification
 * Dataset: <https://www.kaggle.com/datasets/gpiosenka/100-bird-species>
 
 ## About project
